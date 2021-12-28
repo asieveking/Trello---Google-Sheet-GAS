@@ -24,7 +24,7 @@ function Main() {
   
   //Print first row on spreadsheet (Headers)
   sheet.appendRow(["List 📑","Cards 📌","Description 🧾","Tags 📍" , "Checked ✔" ,"Check Items 🔳","Expiration date ⏰",
-                   "Completed before the expiration date?  📆","Member Card 👨‍👧","Member Board 👨‍👩‍👧‍👧","Admin Board 👨‍🚀", "Link","Card ID","Board Name"])  
+                   "Completed before the expiration date?  📆","Member Card 👨‍👧","Member Board 👨‍👩‍👧‍👧","Admin Board 👨‍🚀", "Link","Card ID","Board Name"])
   
   //Method GET Boards
   let boards=fetchUrl(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);
@@ -73,10 +73,11 @@ function Main() {
         let card_fields= fetchUrl(url + "cards/" + card.id + "?fields=name,idMembers&customFields=true&customFieldItems=true&" + key_and_token);
         
         //CustomFields ✴
+        const obj_custom_field = new Object();
         if(Object.keys(card_fields.customFieldItems).length !== 0){
-          customFieldsItem(card_fields.customFields, card_fields.customFieldItems)
+          customFieldsItem(card_fields.customFields, card_fields.customFieldItems, obj_custom_field)
         }
-        
+        Logger.log(obj_custom_field)
         //Parameters Members on Card
         let member_card="";       
         if(Object.keys(card_fields.idMembers).length !== 0){
@@ -92,8 +93,8 @@ function Main() {
         card.url ='=HYPERLINK("'+ card.url+'";"Link Card")' 
         
         //Print rows data on SpreadSheets
-        sheet.appendRow([ list.name, card.name,description,tag_name.slice(0,-2), checked,check,expiration_date,expiration_date_Completed,member_card.slice(0,-2) ,member_name, admin_name, card.url,card.id,board.name]);
-        isMilestone=strategicProject=initiativeLead=agileFacilitator=statusJustification=cost=member_nameCustom=area=""
+        sheet.appendRow([ list.name, card.name,description,tag_name.slice(0,-2), checked,check,expiration_date,expiration_date_Completed,member_card.slice(0,-2) ,member_name, admin_name, card.url,   card.id,board.name].concat([obj_custom_field.checked,obj_custom_field.date,obj_custom_field.text,obj_custom_field.number,obj_custom_field.option]));
+        
       }  
     }
   }
@@ -151,7 +152,7 @@ function inDays(actualDate, expectedDate) {
 }
 
    
-function customFieldsItem(customFields, customFieldItems){    
+function customFieldsItem(customFields, customFieldItems, obj_custom_field){    
   list_values_arrow=[]
   for(let i in customFields){          
     for(let j in customFieldItems){
@@ -159,24 +160,34 @@ function customFieldsItem(customFields, customFieldItems){
 
         list_values_header.push(customFields[i].name)
         Logger.log(customFieldItems[j].value)
-        Logger.log(Object.keys(customFieldItems[j].value))
+        // Logger.log(Object.keys(customFieldItems[j].value))
         // Logger.log(Object.keys(customFieldItems[j].value)=="checked")       
-
+        value_field=customFields[i].name
         switch( customFields[i].type){
           case "checkbox":
-            Logger.log(customFieldItems[j].value.checked)
+            // Logger.log(customFieldItems[j].value.checked)
+            obj_custom_field.title_checked=value_field
+            obj_custom_field.checked=customFieldItems[j].value.checked
             break;
           case "date":
-            Logger.log(new Date(customFieldItems[j].value.date))
+            //Logger.log(new Date(customFieldItems[j].value.date))
+            obj_custom_field.title_date=value_field
+            obj_custom_field.date=new Date(customFieldItems[j].value.date)
             break;
           case "text":
-            Logger.log(customFieldItems[j].value.text)
+            // Logger.log(customFieldItems[j].value.text)
+            obj_custom_field.title_text=value_field
+            obj_custom_field.text=customFieldItems[j].value.text
             break;
           case "number":
-            Logger.log(customFieldItems[j].value.number)
+            // Logger.log(customFieldItems[j].value.number)
+            obj_custom_field.title_number=value_field
+            obj_custom_field.number=parseFloat(customFieldItems[j].value.number)
             break;
-          case "list":
-            Logger.log(customOption(customFields[i],customFieldItems[j]))
+          case "list":            
+            // Logger.log(customOption(customFields[i],customFieldItems[j]))
+            obj_custom_field.title_option=value_field
+            obj_custom_field.option=customOption(customFields[i],customFieldItems[j])
             break;
           
         }
@@ -265,8 +276,8 @@ function fillKeyToken(data){
 }
 let api_key, api_token, dashboard
 let list_values_header=[]
-// Variables declared to use in custom fields
-let isMilestone=strategicProject=initiativeLead=agileFacilitator=statusJustification=cost=member_nameCustom=area=""
+
+
 
 
 
