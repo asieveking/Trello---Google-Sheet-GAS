@@ -13,20 +13,19 @@ function Main() {
   
   
   //Initialize Sheet  
-  let dashboardsheet=upperFirstLetter(dashboard) 
-  dashboardsheet+=" - Trello"
-  if(!ss.getSheetByName(dashboardsheet)){
-    ss.insertSheet(dashboardsheet);
+  let dashboard_sheet=upperFirstLetter(dashboard) 
+  dashboard_sheet+=" - Trello"
+  if(!ss.getSheetByName(dashboard_sheet)){
+    ss.insertSheet(dashboard_sheet);
   }
   
-  let sheet = ss.getSheetByName(dashboardsheet);       
+  let sheet = ss.getSheetByName(dashboard_sheet);       
   sheet.clear();
   
   //Print first row on spreadsheet (Headers)
   sheet.appendRow(["List 📑","Cards 📌","Description 🧾","Tags 📍" , "Checked ✔" ,"Check Items 🔳","Expiration date ⏰",
                    "Completed before the expiration date?  📆","Member Card 👨‍👧","Member Board 👨‍👩‍👧‍👧","Admin Board 👨‍🚀", "Link","Card ID","Board Name"])  
   
-  s
   //Method GET Boards
   let boards=fetchUrl(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);
   
@@ -37,23 +36,23 @@ function Main() {
     if(board.name.toLowerCase().includes(dashboard)==false || board.closed==true ){continue} 
     
     // Parameter of Members
-    let memberArray=[], adminName="", memberName="";
+    let memberArray=[], admin_name="", member_name="";
     for(let i in board.members){
       for(let j in board.memberships){      
         if(board.members[i].id===board.memberships[j].idMember){          
           if(board.memberships[j].memberType==="admin")
           {         
-            adminName+= board.members[i].fullName+" / ";                     
+            admin_name+= board.members[i].fullName+" / ";                     
           }
-            memberName+= board.members[i].fullName+" / ";
+            member_name+= board.members[i].fullName+" / ";
           
           memberArray.push( new memberObject(board.members[i].id,board.members[i].fullName,board.memberships[j].memberType));           
           break;
         }
       }      
     }
-    memberName= memberName.slice(0,-2)
-    adminName = adminName.slice(0,-2)
+    member_name= member_name.slice(0,-2)
+    admin_name = admin_name.slice(0,-2)
 
     //Method GET Lists & Cards
     let lists = fetchUrl(url +"boards/" + board.id + "/lists?cards=open&" + key_and_token)
@@ -63,38 +62,38 @@ function Main() {
       
       for (let ite1 in list.cards) {
         let card = list.cards[ite1];
-        let expirationDate="", expirationDateCompleted="";   
+        let expiration_date="", expiration_date_Completed="";   
         if(card.due){
-          expirationDate= new Date(card.due) 
-          expirationDateCompleted=(card.dueComplete)? true: false //Operador condicional ternario         
+          expiration_date= new Date(card.due) 
+          expiration_date_Completed=(card.dueComplete)? true: false //Operador condicional ternario         
         }
         let description =card.desc, check= card.badges.checkItems, checked= card.badges.checkItemsChecked; 
         
         //Method GET CardsCustomField
-        let cardFields= fetchUrl(url + "cards/" + card.id + "?fields=name,idMembers&customFields=true&customFieldItems=true&" + key_and_token);
+        let card_fields= fetchUrl(url + "cards/" + card.id + "?fields=name,idMembers&customFields=true&customFieldItems=true&" + key_and_token);
         
         //CustomFields ✴
-        if(Object.keys(cardFields.customFieldItems).length !== 0){
-          customFieldsItem(cardFields.customFields, cardFields.customFieldItems)
+        if(Object.keys(card_fields.customFieldItems).length !== 0){
+          customFieldsItem(card_fields.customFields, card_fields.customFieldItems)
         }
         
         //Parameters Members on Card
-        let memberCard="";       
-        if(Object.keys(cardFields.idMembers).length !== 0){
-          memberCard=joinMemberCard(memberArray,cardFields);
+        let member_card="";       
+        if(Object.keys(card_fields.idMembers).length !== 0){
+          member_card=joinMemberCard(memberArray,card_fields);
         }   
         
         //Parameters Tag on Card
-        let tagName =""; 
+        let tag_name =""; 
         for(let ite in card.labels){
-          tagName = tagName.concat(card.labels[ite].name," / ");            
+          tag_name = tag_name.concat(card.labels[ite].name," / ");            
         } 
         
         card.url ='=HYPERLINK("'+ card.url+'";"Link Card")' 
         
         //Print rows data on SpreadSheets
-        sheet.appendRow([ list.name, card.name,description,tagName.slice(0,-2), checked,check,expirationDate,expirationDateCompleted,memberCard.slice(0,-2) ,memberName, adminName, card.url,card.id,board.name]);
-        isMilestone=strategicProject=initiativeLead=agileFacilitator=statusJustification=cost=memberNameCustom=area=""
+        sheet.appendRow([ list.name, card.name,description,tag_name.slice(0,-2), checked,check,expiration_date,expiration_date_Completed,member_card.slice(0,-2) ,member_name, admin_name, card.url,card.id,board.name]);
+        isMilestone=strategicProject=initiativeLead=agileFacilitator=statusJustification=cost=member_nameCustom=area=""
       }  
     }
   }
@@ -106,17 +105,17 @@ function fetchUrl(urlBuilt){
   return  JSON.parse(response.getContentText());   
 }
 
-function joinMemberCard(memberArray,cardFields){
-  let memberCard="";
-  for(let i in cardFields.idMembers){
+function joinMemberCard(memberArray,card_fields){
+  let member_card="";
+  for(let i in card_fields.idMembers){
     for(let j in memberArray){                
-      if(cardFields.idMembers[i]===memberArray[j].id){                  
-        memberCard= memberCard.concat(memberArray[j].fullName, " / ");
+      if(card_fields.idMembers[i]===memberArray[j].id){                  
+        member_card= member_card.concat(memberArray[j].fullName, " / ");
         break;
       }
     }
   }
-  return memberCard;
+  return member_card;
 }
 
 function extractAndCalculateDateDiff(nameDate, statusTask){  
@@ -152,36 +151,34 @@ function inDays(actualDate, expectedDate) {
 }
 
    
-function customFieldsItem(customFields, customFieldItems){  
+function customFieldsItem(customFields, customFieldItems){    
+  list_values_arrow=[]
   for(let i in customFields){          
     for(let j in customFieldItems){
       if( customFields[i].id===customFieldItems[j].idCustomField){
-        
-        switch(customFields[i].name) {
-          case "Area":
-            area=customOption(customFields[i],customFieldItems[j]);       
-            break;       
-          case "Is Milestone?":
-            isMilestone=customFieldItems[j].value.checked
+
+        list_values_header.push(customFields[i].name)
+        Logger.log(customFieldItems[j].value)
+        Logger.log(Object.keys(customFieldItems[j].value))
+        // Logger.log(Object.keys(customFieldItems[j].value)=="checked")       
+
+        switch( customFields[i].type){
+          case "checkbox":
+            Logger.log(customFieldItems[j].value.checked)
             break;
-          case "Strategic Project (PE)":
-            strategicProject= customOption(customFields[i],customFieldItems[j])
-            break;   
-          case "Initiative Lead":
-            initiativeLead=customFieldItems[j].value.text
-            break; 
-          case "Agile Facilitator":
-            agileFacilitator = customOption(customFields[i],customFieldItems[j])
+          case "date":
+            Logger.log(new Date(customFieldItems[j].value.date))
             break;
-          case "Status Justification":
-            statusJustification=customFieldItems[j].value.text
-            break;                   
-          case "Cost (CLP)":
-            cost=customFieldItems[j].value.number
-            break;     
-          case "Member Name":
-            memberNameCustom=customFieldItems[j].value.text
+          case "text":
+            Logger.log(customFieldItems[j].value.text)
             break;
+          case "number":
+            Logger.log(customFieldItems[j].value.number)
+            break;
+          case "list":
+            Logger.log(customOption(customFields[i],customFieldItems[j]))
+            break;
+          
         }
       }
     }
@@ -220,11 +217,11 @@ function onOpen(){
   
 }
 
-let itemMeta="Key and Token"
+let item_meta="Key and Token"
 function initMenu(){
   let ui=SpreadsheetApp.getUi();
   let menu= ui.createMenu("Trello");  
-  menu.addItem(itemMeta, "showUserForm")
+  menu.addItem(item_meta, "showUserForm")
   menu.addToUi()
   
 }
@@ -233,8 +230,8 @@ function showUserForm() {
   let template=HtmlService.createTemplateFromFile("userform");
   template.data= getData()
   let html=template.evaluate()
-  html.setTitle(itemMeta).setHeight(500).setWidth(500)
-  SpreadsheetApp.getUi().showModalDialog(html, itemMeta)
+  html.setTitle(item_meta).setHeight(500).setWidth(500)
+  SpreadsheetApp.getUi().showModalDialog(html, item_meta)
   //.showSidebar(html)
 }
 function getData(){
@@ -267,8 +264,9 @@ function fillKeyToken(data){
   dashboard = data.dashboard
 }
 let api_key, api_token, dashboard
+let list_values_header=[]
 // Variables declared to use in custom fields
-let isMilestone=strategicProject=initiativeLead=agileFacilitator=statusJustification=cost=memberNameCustom=area=""
+let isMilestone=strategicProject=initiativeLead=agileFacilitator=statusJustification=cost=member_nameCustom=area=""
 
 
 
