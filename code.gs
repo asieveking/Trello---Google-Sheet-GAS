@@ -1,7 +1,3 @@
-//CHILE BI
-//Version 1.2
-//contact email: alejandro.sieveking@roche.com or chile.bi@roche.com
-
 //[You must be registered in the Trello account to obtain the API key]
 //url key    *  https://trello.com/app-key *
 //url token  * https://trello.com/1/authorize?expiration=never&scope=read,write,account&response_type=token&name=Server%20Token&key=[KEY] *
@@ -10,14 +6,14 @@
 // Run function "Main ()" to start
 
 function Main() {
-  GetData()
+  getData()
   const url= "https://api.trello.com/1/"; 
   const key_and_token = "key="+api_key+"&token="+api_token;
   let ss = SpreadsheetApp.getActiveSpreadsheet()  
   
   
   //Initialize Sheet  
-  let dashboardsheet=UpperFirstLetter(dashboard) 
+  let dashboardsheet=upperFirstLetter(dashboard) 
   dashboardsheet+=" - Trello"
   if(!ss.getSheetByName(dashboardsheet)){
     ss.insertSheet(dashboardsheet);
@@ -27,12 +23,12 @@ function Main() {
   sheet.clear();
   
   //Print first row on spreadsheet (Headers)
-  sheet.appendRow(["List","Task","Description","Tags" , "Checked" ,"Check Items","Expiration date",
-                   "Completed before the expiration date?","Member Card","Member Board","Admin Board", "Link","Card ID","Board Name"])  
+  sheet.appendRow(["List 📑","Cards 📌","Description 🧾","Tags 📍" , "Checked ✔" ,"Check Items 🔳","Expiration date ⏰",
+                   "Completed before the expiration date?  📆","Member Card 👨‍👧","Member Board 👨‍👩‍👧‍👧","Admin Board 👨‍🚀", "Link","Card ID","Board Name"])  
   
-  
+  s
   //Method GET Boards
-  let boards=FetchURL(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);
+  let boards=fetchUrl(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);
   
   
   for(let val in boards){
@@ -59,11 +55,8 @@ function Main() {
     memberName= memberName.slice(0,-2)
     adminName = adminName.slice(0,-2)
 
-
-
-    
     //Method GET Lists & Cards
-    let lists = FetchURL(url +"boards/" + board.id + "/lists?cards=open&" + key_and_token)
+    let lists = fetchUrl(url +"boards/" + board.id + "/lists?cards=open&" + key_and_token)
     
     for (let ite0 in lists) {
       let list = lists[ite0];
@@ -78,11 +71,11 @@ function Main() {
         let description =card.desc, check= card.badges.checkItems, checked= card.badges.checkItemsChecked; 
         
         //Method GET CardsCustomField
-        let cardFields= FetchURL(url + "cards/" + card.id + "?fields=name,idMembers&customFields=true&customFieldItems=true&" + key_and_token);
+        let cardFields= fetchUrl(url + "cards/" + card.id + "?fields=name,idMembers&customFields=true&customFieldItems=true&" + key_and_token);
         
         //CustomFields ✴
         if(Object.keys(cardFields.customFieldItems).length !== 0){
-          CustomFieldsItem(cardFields.customFields, cardFields.customFieldItems)
+          customFieldsItem(cardFields.customFields, cardFields.customFieldItems)
         }
         
         //Parameters Members on Card
@@ -107,7 +100,7 @@ function Main() {
   }
 }
 
-function FetchURL(urlBuilt){
+function fetchUrl(urlBuilt){
   // Utilities.sleep(300); //300 milliseconds (activate when rate limit exists)
   let response = UrlFetchApp.fetch(urlBuilt);//                   
   return  JSON.parse(response.getContentText());   
@@ -154,32 +147,31 @@ function extractAndCalculateDateDiff(nameDate, statusTask){
 function inDays(actualDate, expectedDate) {
   let d2 = expectedDate.getTime();
   let d1= new Date(actualDate.getFullYear()+"/"+(actualDate.getMonth()+1)+"/"+actualDate.getDate());
-  d1 = d1.getTime();
-  
+  d1 = d1.getTime();  
   return parseInt((d2-d1)/(24*3600*1000));
 }
 
    
-function CustomFieldsItem(customFields, customFieldItems){  
+function customFieldsItem(customFields, customFieldItems){  
   for(let i in customFields){          
     for(let j in customFieldItems){
       if( customFields[i].id===customFieldItems[j].idCustomField){
         
         switch(customFields[i].name) {
           case "Area":
-            area=CustomOption(customFields[i],customFieldItems[j]);       
+            area=customOption(customFields[i],customFieldItems[j]);       
             break;       
           case "Is Milestone?":
             isMilestone=customFieldItems[j].value.checked
             break;
           case "Strategic Project (PE)":
-            strategicProject= CustomOption(customFields[i],customFieldItems[j])
+            strategicProject= customOption(customFields[i],customFieldItems[j])
             break;   
           case "Initiative Lead":
             initiativeLead=customFieldItems[j].value.text
             break; 
           case "Agile Facilitator":
-            agileFacilitator = CustomOption(customFields[i],customFieldItems[j])
+            agileFacilitator = customOption(customFields[i],customFieldItems[j])
             break;
           case "Status Justification":
             statusJustification=customFieldItems[j].value.text
@@ -190,8 +182,6 @@ function CustomFieldsItem(customFields, customFieldItems){
           case "Member Name":
             memberNameCustom=customFieldItems[j].value.text
             break;
-          
-            
         }
       }
     }
@@ -201,17 +191,17 @@ function CustomFieldsItem(customFields, customFieldItems){
 // Text:  customFieldItems[j].value.text;
 // Date:  new Date(customFieldItems[j].value.date);
 // Number:   customFieldItems[j].value.number; 
-// Options:  CustomOption(customFields[i],customFieldItems[j]); 
+// Options:  customOption(customFields[i],customFieldItems[j]); 
 // Checked:  customFieldItems[j].value.checked; 
 
-function CustomOption (customField, customFieldItems){  
+function customOption (customField, customFieldItems){  
   for(let i in customField.options){
     if(customFieldItems.idValue===customField.options[i].id){
       return customField.options[i].value.text
     }
   }
 }
-function UpperFirstLetter(string) {
+function upperFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -241,13 +231,13 @@ function initMenu(){
 
 function showUserForm() {
   let template=HtmlService.createTemplateFromFile("userform");
-  template.data= GetData()
+  template.data= getData()
   let html=template.evaluate()
   html.setTitle(itemMeta).setHeight(500).setWidth(500)
   SpreadsheetApp.getUi().showModalDialog(html, itemMeta)
   //.showSidebar(html)
 }
-function GetData(){
+function getData(){
   let scriptProperty =PropertiesService.getScriptProperties()
   let key=scriptProperty.getProperty("Key")
   let token=scriptProperty.getProperty("Token")
@@ -260,7 +250,7 @@ function GetData(){
     token:token,
     dashboard: dashboard
   }
-  FillKeyToken(data)
+  fillKeyToken(data)
   return data
 }
 function SetData(data){
@@ -268,21 +258,19 @@ function SetData(data){
   ScriptProperties.setProperty("Key", data.key) 
   ScriptProperties.setProperty("Token", data.token) 
   ScriptProperties.setProperty("Dashboard", data.dashboard)
-  FillKeyToken(data)
+  fillKeyToken(data)
 }
 
-function FillKeyToken(data){
+function fillKeyToken(data){
   api_key = data.key
   api_token = data.token
   dashboard = data.dashboard
 }
+let api_key, api_token, dashboard
 // Variables declared to use in custom fields
 let isMilestone=strategicProject=initiativeLead=agileFacilitator=statusJustification=cost=memberNameCustom=area=""
 
-let api_key 
-let api_token
-let dashboard
 
-let url;   
-let key_and_token;
+
+
 
