@@ -26,13 +26,15 @@ function Main() {
   sheet.appendRow(["List 📑","Cards 📌","Description 🧾","Tags 📍" , "Checked ✔" ,"Check Items 🔳","Expiration date ⏰",
                    "Completed before the expiration date?  📆","Member Card 👨‍👧","Member Board 👨‍👩‍👧‍👧","Admin Board 👨‍🚀", "Link","Card ID","Board Name"])
   
+ 
   //Method GET Boards
   let boards=fetchUrl(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);
   
   
   for(let val in boards){
+    final_column=sheet.getLastColumn()
     let board=boards[val];
-    
+    const obj_custom_field_title = new Object();
     if(board.name.toLowerCase().includes(dashboard)==false || board.closed==true ){continue} 
     
     // Parameter of Members
@@ -75,7 +77,7 @@ function Main() {
         //CustomFields ✴
         const obj_custom_field = new Object();
         if(Object.keys(card_fields.customFieldItems).length !== 0){
-          customFieldsItem(card_fields.customFields, card_fields.customFieldItems, obj_custom_field)
+          customFieldsItem(card_fields.customFields, card_fields.customFieldItems, obj_custom_field,obj_custom_field_title)
         }
         Logger.log(obj_custom_field)
         //Parameters Members on Card
@@ -97,6 +99,11 @@ function Main() {
         
       }  
     }
+  // Logger.log(sheet.getLastColumn())
+   
+  
+  titles=[obj_custom_field_title.title_checked,obj_custom_field_title.title_date,obj_custom_field_title.title_text,obj_custom_field_title.obj_custom_field_title,obj_custom_field_title.title_option]
+  sheet.getRange(1,final_column+1,1,titles.length).setValues([titles])  
   }
 }
 
@@ -152,7 +159,7 @@ function inDays(actualDate, expectedDate) {
 }
 
    
-function customFieldsItem(customFields, customFieldItems, obj_custom_field){    
+function customFieldsItem(customFields, customFieldItems, obj_custom_field,obj_custom_field_title){    
   list_values_arrow=[]
   for(let i in customFields){          
     for(let j in customFieldItems){
@@ -160,33 +167,33 @@ function customFieldsItem(customFields, customFieldItems, obj_custom_field){
 
         list_values_header.push(customFields[i].name)
         Logger.log(customFieldItems[j].value)
-        // Logger.log(Object.keys(customFieldItems[j].value))
+        Logger.log(Object.keys(customFieldItems[j].value))
         // Logger.log(Object.keys(customFieldItems[j].value)=="checked")       
         value_field=customFields[i].name
         switch( customFields[i].type){
           case "checkbox":
             // Logger.log(customFieldItems[j].value.checked)
-            obj_custom_field.title_checked=value_field
+            obj_custom_field_title.title_checked=value_field
             obj_custom_field.checked=customFieldItems[j].value.checked
             break;
           case "date":
             //Logger.log(new Date(customFieldItems[j].value.date))
-            obj_custom_field.title_date=value_field
+            obj_custom_field_title.title_date=value_field
             obj_custom_field.date=new Date(customFieldItems[j].value.date)
             break;
           case "text":
             // Logger.log(customFieldItems[j].value.text)
-            obj_custom_field.title_text=value_field
+            obj_custom_field_title.title_text=value_field
             obj_custom_field.text=customFieldItems[j].value.text
             break;
           case "number":
             // Logger.log(customFieldItems[j].value.number)
-            obj_custom_field.title_number=value_field
+            obj_custom_field_title.title_number=value_field
             obj_custom_field.number=parseFloat(customFieldItems[j].value.number)
             break;
           case "list":            
             // Logger.log(customOption(customFields[i],customFieldItems[j]))
-            obj_custom_field.title_option=value_field
+            obj_custom_field_title.title_option=value_field
             obj_custom_field.option=customOption(customFields[i],customFieldItems[j])
             break;
           
@@ -195,12 +202,6 @@ function customFieldsItem(customFields, customFieldItems, obj_custom_field){
     }
   } 
 }
-// Type of CustomFields 
-// Text:  customFieldItems[j].value.text;
-// Date:  new Date(customFieldItems[j].value.date);
-// Number:   customFieldItems[j].value.number; 
-// Options:  customOption(customFields[i],customFieldItems[j]); 
-// Checked:  customFieldItems[j].value.checked; 
 
 function customOption (customField, customFieldItems){  
   for(let i in customField.options){
@@ -221,7 +222,6 @@ function memberObject(id,fullName, memberType) {
     memberType:memberType
   }
 }
-
 
 function onOpen(){
   initMenu()
