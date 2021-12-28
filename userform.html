@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+    <body>
+    
+    
+    <div class="container">
+     <div class="row">
+     <div class="col s5"></div>
+      <div class="col s4"> 
+      <a href="https://trello.com/app-key" target="_blank">
+         <img  width="80" height="36" alt="Link API key" style="padding-top: 4px; padding-left: 6px;"
+         src="https://d2k1ftgv7pobq7.cloudfront.net/meta/u/res/images/brand-assets/Logos/0099ec3754bf473d2bbf317204ab6fea/trello-logo-blue.png">
+      </a>
+      </div>
+     <div class="col s2">
+       <a  class="btn-floating blue pulse" href="https://trello.com/app-key" target="_blank">
+       <i class="material-icons dp44">link</i> 
+       </a>
+     </div>
+     <div class="input-field col s12">
+         <i class="material-icons prefix">vpn_key</i>
+           <input type="text" id="autocomplete-input-key" class="autocomplete-key" value="<?=data.key?>">
+          <label for="autocomplete-input-key">Key</label>
+        </div>
+        <div id="url-token" class="col s6">
+        
+        </div>        
+        <div class="input-field col s12">
+          <i class="material-icons prefix">build</i>
+           <input type="text" id="autocomplete-input-token" class="autocomplete-token" value="<?=data.token?>">
+          <label for="autocomplete-input-token">Token</label>
+        </div>
+          <div class="input-field col s12">
+          <i class="material-icons prefix">dashboard</i>
+           <input type="text" id="autocomplete-input-tablero" class="autocomplete-tablero" value="<?=data.dashboard?>">
+          <label for="autocomplete-input-tablero">Board(s) keyword</label>
+        </div>        
+          <div class="input-field col s12">                         
+          <button id="btn" class="btn waves-effect waves-light blue">Save
+          <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </div><!--END ROW-->
+    
+    
+    </div>
+       <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+  
+    keyBox = document.getElementById('autocomplete-input-key');
+    tokenBox = document.getElementById('autocomplete-input-token');
+    dashboardBox = document.getElementById('autocomplete-input-tablero');
+    keyBox.addEventListener('input', function() {
+      if(keyBox.value && keyBox.value.length >24){
+      document.getElementById('url-token').innerHTML ='<a href="https://trello.com/1/authorize?expiration=never&scope=read,write,account&response_type=token&name=Server%20Token&key='+
+      keyBox.value+'" class="btn-floating btn-small waves-effect waves-light blue"  target="_blank"><i class="material-icons">link</i></a>'    
+      }
+    });
+    document.getElementById('btn').addEventListener('click', function() {
+       data={
+        key: keyBox.value.trim() ,
+        token:tokenBox.value.trim(),
+        dashboard:dashboardBox.value.trim()
+       };
+      var message
+       if(data.key && data.token && data.dashboard){
+         message= 'Saved correctly'
+         google.script.run.SetData(data);
+       }else{
+        message='You must fill in all fields on the form'
+       }
+     M.toast({html: message})
+    })
+    </script>
+    </body>
+  </html>
+
+
+
