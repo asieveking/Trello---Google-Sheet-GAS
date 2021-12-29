@@ -2,7 +2,29 @@
 //url key    *  https://trello.com/app-key *
 //url token  * https://trello.com/1/authorize?expiration=never&scope=read,write,account&response_type=token&name=Server%20Token&key=[KEY] *
 
+function Test(){
+// prueba array
+// let list_nombres=["Alejandro","David"]
+// nombre="Javier"
+// if (list_nombres.length===0 || list_nombres.find(element => element === nombre) == null ){
+//    list_nombres.push(nombre)
+// }
+//   // if (list_nombres.findIndex(element => element === nombre) === -1){
+//   //   list_nombres.push(nombre)
+//   // }
+// Logger.log(list_nombres)
 
+//prueba diccionario
+let dict_nombres={}
+dict_nombres["Alejandro"]=35
+Logger.log(dict_nombres)
+dict_nombres["Alejandro"]=43
+Logger.log(dict_nombres["Alejandro"])
+
+
+
+
+}
 // Run function "Main ()" to start
 
 function Main() {
@@ -28,13 +50,12 @@ function Main() {
   
  
   //Method GET Boards
-  let boards=fetchUrl(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);
-  
-  
+  let boards=fetchUrl(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);  
+  let list_title=[]
+
   for(let val in boards){
     final_column=sheet.getLastColumn()
-    let board=boards[val];
-    const obj_custom_field_title = new Object();
+    let board=boards[val];    
     if(board.name.toLowerCase().includes(dashboard)==false || board.closed==true ){continue} 
     
     // Parameter of Members
@@ -60,11 +81,9 @@ function Main() {
     let lists = fetchUrl(url +"boards/" + board.id + "/lists?cards=open&" + key_and_token)
     
     for (let ite0 in lists) {
-      let list = lists[ite0];
-      
-      for (let ite1 in list.cards) {
-        let card = list.cards[ite1];
-        let expiration_date="", expiration_date_Completed="";   
+      let list = lists[ite0];      
+      for (let ite1 in list.cards) {       
+        let dict_custom_fields={}, card = list.cards[ite1], expiration_date="", expiration_date_Completed="";       
         if(card.due){
           expiration_date= new Date(card.due) 
           expiration_date_Completed=(card.dueComplete)? true: false //Operador condicional ternario         
@@ -74,12 +93,11 @@ function Main() {
         //Method GET CardsCustomField
         let card_fields= fetchUrl(url + "cards/" + card.id + "?fields=name,idMembers&customFields=true&customFieldItems=true&" + key_and_token);
         
-        //CustomFields ✴
-        const obj_custom_field = new Object();
+        //CustomFields ✴        
         if(Object.keys(card_fields.customFieldItems).length !== 0){
-          customFieldsItem(card_fields.customFields, card_fields.customFieldItems, obj_custom_field,obj_custom_field_title)
+          customFieldsItem(card_fields.customFields, card_fields.customFieldItems, dict_custom_fields,list_title)
         }
-        Logger.log(obj_custom_field)
+        Logger.log(dict_custom_fields)
         //Parameters Members on Card
         let member_card="";       
         if(Object.keys(card_fields.idMembers).length !== 0){
@@ -102,8 +120,8 @@ function Main() {
   // Logger.log(sheet.getLastColumn())
    
   
-  titles=[obj_custom_field_title.title_checked,obj_custom_field_title.title_date,obj_custom_field_title.title_text,obj_custom_field_title.obj_custom_field_title,obj_custom_field_title.title_option]
-  sheet.getRange(1,final_column+1,1,titles.length).setValues([titles])  
+  // titles=[obj_custom_field_title.title_checked,obj_custom_field_title.title_date,obj_custom_field_title.title_text,obj_custom_field_title.obj_custom_field_title,obj_custom_field_title.title_option]
+  // sheet.getRange(1,final_column+1,1,titles.length).setValues([titles])  
   }
 }
 
@@ -159,44 +177,39 @@ function inDays(actualDate, expectedDate) {
 }
 
    
-function customFieldsItem(customFields, customFieldItems, obj_custom_field,obj_custom_field_title){    
+function customFieldsItem(customFields, customFieldItems, dict_custom_fields, list_title){    
   list_values_arrow=[]
   for(let i in customFields){          
     for(let j in customFieldItems){
       if( customFields[i].id===customFieldItems[j].idCustomField){
-
-        list_values_header.push(customFields[i].name)
-        Logger.log(customFieldItems[j].value)
-        Logger.log(Object.keys(customFieldItems[j].value))
-        // Logger.log(Object.keys(customFieldItems[j].value)=="checked")       
-        value_field=customFields[i].name
+        // Logger.log(customFieldItems[j].value)
+        // Logger.log(Object.keys(customFieldItems[j].value))
+        title=customFields[i].name
+        if (list_title.length===0 || list_title.find(element => element === title) == null ){
+           list_title.push(title)
+        }        
+        // Logger.log(Object.keys(customFieldItems[j].value)=="checked")               
         switch( customFields[i].type){
           case "checkbox":
-            // Logger.log(customFieldItems[j].value.checked)
-            obj_custom_field_title.title_checked=value_field
-            obj_custom_field.checked=customFieldItems[j].value.checked
+            // Logger.log(customFieldItems[j].value.checked)            
+            dict_custom_fields[title]=customFieldItems[j].value.checked
             break;
           case "date":
-            //Logger.log(new Date(customFieldItems[j].value.date))
-            obj_custom_field_title.title_date=value_field
-            obj_custom_field.date=new Date(customFieldItems[j].value.date)
+            //Logger.log(new Date(customFieldItems[j].value.date))            
+            dict_custom_fields[title]=new Date(customFieldItems[j].value.date)
             break;
           case "text":
             // Logger.log(customFieldItems[j].value.text)
-            obj_custom_field_title.title_text=value_field
-            obj_custom_field.text=customFieldItems[j].value.text
+            dict_custom_fields[title]=customFieldItems[j].value.text
             break;
           case "number":
-            // Logger.log(customFieldItems[j].value.number)
-            obj_custom_field_title.title_number=value_field
-            obj_custom_field.number=parseFloat(customFieldItems[j].value.number)
+            // Logger.log(customFieldItems[j].value.number)            
+            dict_custom_fields[title]=parseFloat(customFieldItems[j].value.number)
             break;
           case "list":            
-            // Logger.log(customOption(customFields[i],customFieldItems[j]))
-            obj_custom_field_title.title_option=value_field
-            obj_custom_field.option=customOption(customFields[i],customFieldItems[j])
+            // Logger.log(customOption(customFields[i],customFieldItems[j]))            
+            dict_custom_fields[title]=customOption(customFields[i],customFieldItems[j])
             break;
-          
         }
       }
     }
@@ -228,7 +241,7 @@ function onOpen(){
   
 }
 
-let item_meta="Key and Token"
+var item_meta="Key and Token"
 function initMenu(){
   let ui=SpreadsheetApp.getUi();
   let menu= ui.createMenu("Trello");  
@@ -274,8 +287,7 @@ function fillKeyToken(data){
   api_token = data.token
   dashboard = data.dashboard
 }
-let api_key, api_token, dashboard
-let list_values_header=[]
+var api_key, api_token, dashboard
 
 
 
