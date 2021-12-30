@@ -3,26 +3,38 @@
 //url token  * https://trello.com/1/authorize?expiration=never&scope=read,write,account&response_type=token&name=Server%20Token&key=[KEY] *
 
 function Test(){
-// prueba array
-// let list_nombres=["Alejandro","David"]
-// nombre="Javier"
-// if (list_nombres.length===0 || list_nombres.find(element => element === nombre) == null ){
-//    list_nombres.push(nombre)
-// }
-//   // if (list_nombres.findIndex(element => element === nombre) === -1){
-//   //   list_nombres.push(nombre)
-//   // }
-// Logger.log(list_nombres)
+  // prueba array
+  let list_nombres=["Alejandro","Francisco","David"]
+  // nombre="Javier"
+  // if (list_nombres.length===0 || list_nombres.find(element => element === nombre) == null ){
+  //    list_nombres.push(nombre)
+  // }
+  //   // if (list_nombres.findIndex(element => element === nombre) === -1){
+  //   //   list_nombres.push(nombre)
+  //   // }
+  // Logger.log(list_nombres)
 
-//prueba diccionario
-let dict_nombres={}
-dict_nombres["Alejandro"]=35
-Logger.log(dict_nombres)
-dict_nombres["Alejandro"]=43
-Logger.log(dict_nombres["Alejandro"])
-
-
-
+  //prueba diccionario
+  let dict_nombres={}
+  dict_nombres["Alejandro"]=35
+  Logger.log(dict_nombres)
+  dict_nombres["Javier"]=43
+  Logger.log(dict_nombres)
+  Logger.log(dict_nombres["Alejandro"])
+  dict_nombres["David"]=80
+  Logger.log(dict_nombres["Marcos"])
+  Logger.log(dict_nombres)
+  Logger.log(Object.keys(dict_nombres))
+  let list_values=[]
+  for(let i in list_nombres){  
+    // Logger.log(dict_nombres[list_nombres[i]])
+    if (dict_nombres[list_nombres[i]] !== null){
+      list_values.push(dict_nombres[list_nombres[i]])
+    }else{
+      list_values.push("")
+    }
+  }
+  Logger.log(list_values)
 
 }
 // Run function "Main ()" to start
@@ -48,13 +60,10 @@ function Main() {
   sheet.appendRow(["List 📑","Cards 📌","Description 🧾","Tags 📍" , "Checked ✔" ,"Check Items 🔳","Expiration date ⏰",
                    "Completed before the expiration date?  📆","Member Card 👨‍👧","Member Board 👨‍👩‍👧‍👧","Admin Board 👨‍🚀", "Link","Card ID","Board Name"])
   
- 
+  let list_title=[], list_values=[],final_column=sheet.getLastColumn()     
   //Method GET Boards
-  let boards=fetchUrl(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);  
-  let list_title=[]
-
-  for(let val in boards){
-    final_column=sheet.getLastColumn()
+  let boards=fetchUrl(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);    
+  for(let val in boards){    
     let board=boards[val];    
     if(board.name.toLowerCase().includes(dashboard)==false || board.closed==true ){continue} 
     
@@ -93,11 +102,19 @@ function Main() {
         //Method GET CardsCustomField
         let card_fields= fetchUrl(url + "cards/" + card.id + "?fields=name,idMembers&customFields=true&customFieldItems=true&" + key_and_token);
         
-        //CustomFields ✴        
+        //CustomFields ✴ 
         if(Object.keys(card_fields.customFieldItems).length !== 0){
-          customFieldsItem(card_fields.customFields, card_fields.customFieldItems, dict_custom_fields,list_title)
+          customFieldsItem(card_fields.customFields, card_fields.customFieldItems, dict_custom_fields,list_title)     
+
+          for(let i in list_title){            
+            if (dict_custom_fields[list_title[i]] !== null){
+              list_values.push(dict_custom_fields[list_title[i]])
+            }else{
+              list_values.push("")
+            }
+          }
         }
-        Logger.log(dict_custom_fields)
+        // Logger.log(dict_custom_fields)
         //Parameters Members on Card
         let member_card="";       
         if(Object.keys(card_fields.idMembers).length !== 0){
@@ -109,20 +126,17 @@ function Main() {
         for(let ite in card.labels){
           tag_name = tag_name.concat(card.labels[ite].name," / ");            
         } 
-        
+
+        // Create HYPERLINK
         card.url ='=HYPERLINK("'+ card.url+'";"Link Card")' 
         
         //Print rows data on SpreadSheets
-        sheet.appendRow([ list.name, card.name,description,tag_name.slice(0,-2), checked,check,expiration_date,expiration_date_Completed,member_card.slice(0,-2) ,member_name, admin_name, card.url,   card.id,board.name].concat([obj_custom_field.checked,obj_custom_field.date,obj_custom_field.text,obj_custom_field.number,obj_custom_field.option]));
-        
+        sheet.appendRow([ list.name, card.name,description,tag_name.slice(0,-2), checked,check,expiration_date,expiration_date_Completed,member_card.slice(0,-2) ,member_name, admin_name, card.url,  card.id,board.name].concat(list_values));
+        list_values=[]
       }  
-    }
-  // Logger.log(sheet.getLastColumn())
-   
-  
-  // titles=[obj_custom_field_title.title_checked,obj_custom_field_title.title_date,obj_custom_field_title.title_text,obj_custom_field_title.obj_custom_field_title,obj_custom_field_title.title_option]
-  // sheet.getRange(1,final_column+1,1,titles.length).setValues([titles])  
+    }   
   }
+  sheet.getRange(1,final_column+1,1, list_title.length).setValues([list_title])  
 }
 
 function fetchUrl(urlBuilt){
@@ -130,6 +144,9 @@ function fetchUrl(urlBuilt){
   let response = UrlFetchApp.fetch(urlBuilt);//                   
   return  JSON.parse(response.getContentText());   
 }
+
+
+
 
 function joinMemberCard(memberArray,card_fields){
   let member_card="";
