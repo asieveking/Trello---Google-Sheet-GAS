@@ -2,41 +2,6 @@
 //url key    *  https://trello.com/app-key *
 //url token  * https://trello.com/1/authorize?expiration=never&scope=read,write,account&response_type=token&name=Server%20Token&key=[KEY] *
 
-function Test(){
-  // prueba array
-  let list_nombres=["Alejandro","Francisco","David"]
-  // nombre="Javier"
-  // if (list_nombres.length===0 || list_nombres.find(element => element === nombre) == null ){
-  //    list_nombres.push(nombre)
-  // }
-  //   // if (list_nombres.findIndex(element => element === nombre) === -1){
-  //   //   list_nombres.push(nombre)
-  //   // }
-  // Logger.log(list_nombres)
-
-  //prueba diccionario
-  let dict_nombres={}
-  dict_nombres["Alejandro"]=35
-  Logger.log(dict_nombres)
-  dict_nombres["Javier"]=43
-  Logger.log(dict_nombres)
-  Logger.log(dict_nombres["Alejandro"])
-  dict_nombres["David"]=80
-  Logger.log(dict_nombres["Marcos"])
-  Logger.log(dict_nombres)
-  Logger.log(Object.keys(dict_nombres))
-  let list_values=[]
-  for(let i in list_nombres){  
-    // Logger.log(dict_nombres[list_nombres[i]])
-    if (dict_nombres[list_nombres[i]] !== null){
-      list_values.push(dict_nombres[list_nombres[i]])
-    }else{
-      list_values.push("")
-    }
-  }
-  Logger.log(list_values)
-
-}
 // Run function "Main ()" to start
 
 function Main() {
@@ -44,7 +9,6 @@ function Main() {
   const url= "https://api.trello.com/1/"; 
   const key_and_token = "key="+api_key+"&token="+api_token;
   let ss = SpreadsheetApp.getActiveSpreadsheet()  
-  
   
   //Initialize Sheet  
   let dashboard_sheet=upperFirstLetter(dashboard) 
