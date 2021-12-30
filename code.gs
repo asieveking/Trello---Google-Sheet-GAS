@@ -127,37 +127,29 @@ function joinMemberCard(memberArray,card_fields){
   return member_card;
 }
 // Fill custom fields  
-function customFieldsItem(customFields, customFieldItems, dict_custom_fields, list_title){    
-  list_values_arrow=[]
+function customFieldsItem(customFields, customFieldItems, dict_custom_fields, list_title){      
   for(let i in customFields){          
     for(let j in customFieldItems){
-      if( customFields[i].id===customFieldItems[j].idCustomField){
-        // Logger.log(customFieldItems[j].value)
-        // Logger.log(Object.keys(customFieldItems[j].value))
+      if( customFields[i].id===customFieldItems[j].idCustomField){       
         title=customFields[i].name
         if (list_title.length===0 || list_title.find(element => element === title) == null ){
            list_title.push(title)
         }        
         // Logger.log(Object.keys(customFieldItems[j].value)=="checked")               
         switch( customFields[i].type){
-          case "checkbox":
-            // Logger.log(customFieldItems[j].value.checked)            
+          case "checkbox":                       
             dict_custom_fields[title]=customFieldItems[j].value.checked
             break;
-          case "date":
-            //Logger.log(new Date(customFieldItems[j].value.date))            
+          case "date":                      
             dict_custom_fields[title]=new Date(customFieldItems[j].value.date)
             break;
-          case "text":
-            // Logger.log(customFieldItems[j].value.text)
+          case "text":            
             dict_custom_fields[title]=customFieldItems[j].value.text
             break;
-          case "number":
-            // Logger.log(customFieldItems[j].value.number)            
+          case "number":              
             dict_custom_fields[title]=parseFloat(customFieldItems[j].value.number)
             break;
-          case "list":            
-            // Logger.log(customOption(customFields[i],customFieldItems[j]))            
+          case "list":                                  
             dict_custom_fields[title]=customOption(customFields[i],customFieldItems[j])
             break;
         }
