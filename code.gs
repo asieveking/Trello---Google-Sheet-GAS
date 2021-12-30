@@ -9,15 +9,18 @@ function Main() {
   const url= "https://api.trello.com/1/"; 
   const key_and_token = "key="+api_key+"&token="+api_token;
   let ss = SpreadsheetApp.getActiveSpreadsheet()  
-  
+
   //Initialize Sheet  
   let dashboard_sheet=upperFirstLetter(dashboard) 
+  //Name sheet
   dashboard_sheet+=" - Trello"
+  // Create sheet if not exists
   if(!ss.getSheetByName(dashboard_sheet)){
     ss.insertSheet(dashboard_sheet);
   }
-  
-  let sheet = ss.getSheetByName(dashboard_sheet);       
+  //Get sheet by name
+  let sheet = ss.getSheetByName(dashboard_sheet);
+  // Clear sheet 
   sheet.clear();
   
   //Print first row on spreadsheet (Headers)
@@ -27,36 +30,38 @@ function Main() {
   let list_title=[], list_values=[],final_column=sheet.getLastColumn()     
   //Method GET Boards
   let boards=fetchUrl(url + "members/me/boards?fields=name,url,closed,memberships&members=all&" + key_and_token);    
-  for(let val in boards){    
-    let board=boards[val];    
-    if(board.name.toLowerCase().includes(dashboard)==false || board.closed==true ){continue} 
-    
-    // Parameter of Members
+  
+  for(let b in boards){    
+    let board=boards[b];  
+    //skip if dashboard not contain name
+    if(board.name.toLowerCase().includes(dashboard)==false || board.closed==true ){continue}     
+    //Get all member of dashboard
     let memberArray=[], admin_name="", member_name="";
     for(let i in board.members){
       for(let j in board.memberships){      
-        if(board.members[i].id===board.memberships[j].idMember){          
+        if(board.members[i].id===board.memberships[j].idMember){ 
+          // Get sdmin dashhboard
           if(board.memberships[j].memberType==="admin")
           {         
             admin_name+= board.members[i].fullName+" / ";                     
-          }
-            member_name+= board.members[i].fullName+" / ";
-          
+          }          
+          member_name+= board.members[i].fullName+" / ";          
           memberArray.push( new memberObject(board.members[i].id,board.members[i].fullName,board.memberships[j].memberType));           
           break;
         }
       }      
     }
+    //clean "/ " to the end
     member_name= member_name.slice(0,-2)
     admin_name = admin_name.slice(0,-2)
 
     //Method GET Lists & Cards
-    let lists = fetchUrl(url +"boards/" + board.id + "/lists?cards=open&" + key_and_token)
-    
-    for (let ite0 in lists) {
-      let list = lists[ite0];      
-      for (let ite1 in list.cards) {       
-        let dict_custom_fields={}, card = list.cards[ite1], expiration_date="", expiration_date_Completed="";       
+    let lists = fetchUrl(url +"boards/" + board.id + "/lists?cards=open&" + key_and_token)    
+
+    for (let l in lists) {
+      let list = lists[l];      
+      for (let c in list.cards) {       
+        let dict_custom_fields={}, card = list.cards[c], expiration_date= expiration_date_Completed="";          
         if(card.due){
           expiration_date= new Date(card.due) 
           expiration_date_Completed=(card.dueComplete)? true: false //Operador condicional ternario         
@@ -78,23 +83,23 @@ function Main() {
             }
           }
         }
-        // Logger.log(dict_custom_fields)
-        //Parameters Members on Card
+        
+        //Parameters Members on the card
         let member_card="";       
         if(Object.keys(card_fields.idMembers).length !== 0){
           member_card=joinMemberCard(memberArray,card_fields);
         }   
         
-        //Parameters Tag on Card
+        //Parameters tag on the card
         let tag_name =""; 
-        for(let ite in card.labels){
-          tag_name = tag_name.concat(card.labels[ite].name," / ");            
+        for(let i in card.labels){
+          tag_name = tag_name.concat(card.labels[i].name," / ");            
         } 
 
         // Create HYPERLINK
         card.url ='=HYPERLINK("'+ card.url+'";"Link Card")' 
         
-        //Print rows data on SpreadSheets
+        //Print rows data on spreadsheets
         sheet.appendRow([ list.name, card.name,description,tag_name.slice(0,-2), checked,check,expiration_date,expiration_date_Completed,member_card.slice(0,-2) ,member_name, admin_name, card.url,  card.id,board.name].concat(list_values));
         list_values=[]
       }  
@@ -102,15 +107,12 @@ function Main() {
   }
   sheet.getRange(1,final_column+1,1, list_title.length).setValues([list_title])  
 }
-
+// Request API
 function fetchUrl(urlBuilt){
   // Utilities.sleep(300); //300 milliseconds (activate when rate limit exists)
   let response = UrlFetchApp.fetch(urlBuilt);//                   
   return  JSON.parse(response.getContentText());   
 }
-
-
-
 
 function joinMemberCard(memberArray,card_fields){
   let member_card="";
@@ -124,40 +126,7 @@ function joinMemberCard(memberArray,card_fields){
   }
   return member_card;
 }
-
-function extractAndCalculateDateDiff(nameDate, statusTask){  
-  if(nameDate.indexOf("[")!=-1 && nameDate.indexOf("]") !=-1 && !statusTask){
-    let date= (nameDate.slice(nameDate.indexOf("[")+1,nameDate.indexOf("]"))).trim();   
-    
-    if(date.indexOf("/") !=  -1){
-      date= date.split("/") 
-    }else if(date.indexOf("-") !=  -1){
-      date= date.split("-") 
-    }else if(date.indexOf(".") !=  -1){
-      date= date.split(".") 
-    }else{
-      return ""
-    }
-    date= new Date(date[2]+"/"+date[1]+"/"+date[0])// YYYY-MM-DD or YYYY/MM/DD
-    let day=date.getDate(), month=date.getMonth()+1, year=date.getFullYear();
-    if(typeof day !== 'number' || typeof month !=='number'|| typeof year !=='number') {return "";}
-    
-    let actualDate=new Date();
-    //    let actualMonth=actualDate.getMonth()+1 //0=January, 1=February
-    //    let actualDay=actualDate.getDate(),actualYear=actualDate.getFullYear();    
-    
-    return inDays(actualDate,date)      
-  }
-}
-
-function inDays(actualDate, expectedDate) {
-  let d2 = expectedDate.getTime();
-  let d1= new Date(actualDate.getFullYear()+"/"+(actualDate.getMonth()+1)+"/"+actualDate.getDate());
-  d1 = d1.getTime();  
-  return parseInt((d2-d1)/(24*3600*1000));
-}
-
-   
+// Fill custom fields  
 function customFieldsItem(customFields, customFieldItems, dict_custom_fields, list_title){    
   list_values_arrow=[]
   for(let i in customFields){          
@@ -196,7 +165,7 @@ function customFieldsItem(customFields, customFieldItems, dict_custom_fields, li
     }
   } 
 }
-
+// Search option selected
 function customOption (customField, customFieldItems){  
   for(let i in customField.options){
     if(customFieldItems.idValue===customField.options[i].id){
@@ -204,11 +173,11 @@ function customOption (customField, customFieldItems){
     }
   }
 }
+
 function upperFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-
+//object member
 function memberObject(id,fullName, memberType) {
   return{
     id:id,
@@ -216,13 +185,12 @@ function memberObject(id,fullName, memberType) {
     memberType:memberType
   }
 }
-
+//Initialize Menu Trello
 function onOpen(){
-  initMenu()
-  
+  initMenu()  
 }
 
-var item_meta="Key and Token"
+
 function initMenu(){
   let ui=SpreadsheetApp.getUi();
   let menu= ui.createMenu("Trello");  
@@ -255,7 +223,7 @@ function getData(){
   fillKeyToken(data)
   return data
 }
-function SetData(data){
+function setData(data){
   let scriptProperty =PropertiesService.getScriptProperties()
   ScriptProperties.setProperty("Key", data.key) 
   ScriptProperties.setProperty("Token", data.token) 
@@ -268,7 +236,7 @@ function fillKeyToken(data){
   api_token = data.token
   dashboard = data.dashboard
 }
-var api_key, api_token, dashboard
+var api_key, api_token, dashboard,item_meta="Key and Token"
 
 
 

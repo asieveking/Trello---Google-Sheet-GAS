@@ -74,12 +74,12 @@
         dashboard:dashboardBox.value.trim()
        };
       var message
-       if(data.key && data.token && data.dashboard){
-         message= 'Saved correctly'
-         google.script.run.SetData(data);
-       }else{
+      if(data.key && data.token && data.dashboard){
+        message= 'Saved correctly'
+        google.script.run.setData(data);
+      }else{
         message='You must fill in all fields on the form'
-       }
+      }
      M.toast({html: message})
     })
     </script>
