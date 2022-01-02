@@ -44,7 +44,7 @@ Para continuar con este paso, primero, debemos asegurarnos de estar logueado en 
 Ahora puedes hacer click sobre el boton 'Run' para comenzar a ejecutar el script. 
 Si todo esta correcto, el script debera crear una nueva hoja de calculo con la informacion  de tu(s) tablero(s)
 
-##Automatizacion de Extraccion
+## Automatizacion de Extraccion
 
 Si deseas que la informacion se extraiga automaticamente, sin tener que presionar el boton "Run". Entonces, deberas seguir las siguientes instrucciones:
 
@@ -56,14 +56,17 @@ Si deseas que la informacion se extraiga automaticamente, sin tener que presiona
 ![image](https://drive.google.com/uc?export=view&id=1MsQ1KiKOqP8qRe9ZzfR8U3B60g_JFJKg)
 ###### 4
 Debes seleccionar los mismos campos que se muestran acontinuacion:
+
 ![image](https://drive.google.com/uc?export=view&id=1_dA9PKIPBm_cHaDpUew1d-uFhKiKSPe2)
+
 Por ejemplo: Segun la imagen anterior, el script se ejecutara todos los dias entre las 8 y 9 pm. Puedes cambiar la hora de ejecucion segun tus gustos o preferencias.
 Tambien, puedes ser notificado en caso de que la extraccion falle. Para eso, debes habilitar la opcion "Failure notification settings": inmediatemente, cada hora, cada dia o semenalmente. (esta notificacion llegara via Gmail)
 Finalmente presionas el boton guardar.
 ###### 5
-![image](https://drive.google.com/uc?export=view&id=1g6J-6Eyeg_Mytrn-oe659luLXe6PLTBl)
-Se ha guardado correctamente la programacion de ejecucion del script. Recuerda que puedes seguir agregando mas horarios de ejecucion presionando el boton "Add Trigger"
 
+![image](https://drive.google.com/uc?export=view&id=1g6J-6Eyeg_Mytrn-oe659luLXe6PLTBl)
+
+Se ha guardado correctamente la programacion de ejecucion del script. Recuerda que puedes seguir agregando mas horarios de ejecucion presionando el boton "Add Trigger"
 
 Felicidades! Ahora el script esta listo para ejecutarse automaticamente segun tu programacion. 
 
