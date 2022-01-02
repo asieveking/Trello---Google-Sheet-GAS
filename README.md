@@ -8,7 +8,7 @@ Este desarrollo utiliza las credenciales de API Trello (Key & Token), con el len
 
 ![image](https://drive.google.com/uc?export=view&id=1BGVQff2jyvPCHqxTBbG9THcnBCT5vHHK)
 
-## Ahora, incluye soporte para la extraccion de campos personalizados
+### Ahora, incluye soporte para la extraccion de campos personalizados
 ![image](https://drive.google.com/uc?export=view&id=1bnTCGOdz2z7DOJJYgGKqTAgesaeJiep0)
 
 ![image](https://drive.google.com/uc?export=view&id=1Z9eVsrnj1GcYsFG7A1LPQYJfT_eb_WOk)
@@ -26,19 +26,19 @@ Despues de realizar la copia, debes otorgarle permisos al script para ejecutarse
 ### Ingresando credenciales de Trello al formulario
 
 Para continuar con este paso, primero, debemos asegurarnos de estar logueado en Trello. Y acontinuacion, seguir los siguientes instruciones:
-###### 1
+##### 1
 ![image](https://drive.google.com/uc?export=view&id=1pvF8Nr3vvtwKZMDYRf2hpvX2Q6bMWe4P)
-###### 2
+##### 2
 ![image](https://drive.google.com/uc?export=view&id=1ovzEDxABnEpzu1eJPduVE5Sd7IuPt8Vn)
-###### 3
+##### 3
 ![image](https://drive.google.com/uc?export=view&id=1sHC7-PuOMsCeVD-gcmoNKrhzC3PX7_XZ)
-###### 4
+##### 4
 ![image](https://drive.google.com/uc?export=view&id=1DgQc6BCdUaogBIPfn3nC8Unz7-2P89cd)
-###### 5
+##### 5
 ![image](https://drive.google.com/uc?export=view&id=1JeTF3AIRTHcvYuLh4_QpwCe0WQhEgUjR)
-###### 6
+##### 6
 ![image](https://drive.google.com/uc?export=view&id=17-QQt6gIi5Qc1hf7jGgn0Ai1UkibFjlv)
-###### 7
+##### 7
 ![image](https://drive.google.com/uc?export=view&id=1SPkbt7agMo9nk0fsyOlXnTs1NL82XXyO)
 
 Ahora puedes hacer click sobre el boton 'Run' para comenzar a ejecutar el script. 
