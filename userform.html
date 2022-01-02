@@ -40,13 +40,18 @@
            <input type="text" id="autocomplete-input-token" class="autocomplete-token" value="<?=data.token?>">
           <label for="autocomplete-input-token">Token</label>
         </div>
-          <div class="input-field col s12">
+        <div class="input-field col s12">
           <i class="material-icons prefix">dashboard</i>
            <input type="text" id="autocomplete-input-tablero" class="autocomplete-tablero" value="<?=data.dashboard?>">
           <label for="autocomplete-input-tablero">Board(s) keyword</label>
-        </div>        
-          <div class="input-field col s12">                         
-          <button id="btn" class="btn waves-effect waves-light blue">Save
+        </div> 
+        <div class="input-field col s8">                         
+          <button id="btn-clear" class="btn waves-effect waves-light blue">Clear
+          <i class="material-icons right">clear_all</i>
+          </button>
+        </div>       
+        <div class="input-field col s4">                         
+          <button id="btn-send" class="btn waves-effect waves-light blue">Save
           <i class="material-icons right">send</i>
           </button>
         </div>
@@ -67,7 +72,7 @@
       keyBox.value+'" class="btn-floating btn-small waves-effect waves-light blue"  target="_blank"><i class="material-icons">link</i></a>'    
       }
     });
-    document.getElementById('btn').addEventListener('click', function() {
+    document.getElementById('btn-send').addEventListener('click', function() {
        data={
         key: keyBox.value.trim() ,
         token:tokenBox.value.trim(),
@@ -81,6 +86,19 @@
         message='You must fill in all fields on the form'
       }
      M.toast({html: message})
+    })
+    document.getElementById('btn-clear').addEventListener('click', function() {       
+      if(keyBox.value || tokenBox.value || dashboardBox.value){  
+        data={
+          key: "",
+          token:"",
+          dashboard:""
+        };        
+        let message= 'Clean fields'
+        keyBox.value=tokenBox.value=dashboardBox.value="";         
+        google.script.run.setData(data);      
+        M.toast({html: message})
+      }
     })
     </script>
     </body>
