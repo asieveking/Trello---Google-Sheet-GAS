@@ -8,7 +8,7 @@ Este desarrollo utiliza las credenciales de API Trello (Key & Token), con el len
 
 ![image](https://drive.google.com/uc?export=view&id=1BGVQff2jyvPCHqxTBbG9THcnBCT5vHHK)
 
-## :tw-1f525:  Ahora, incluye soporte para la extraccion de campos personalizados :tw-1f525: 
+## Ahora, incluye soporte para la extraccion de campos personalizados
 ![image](https://drive.google.com/uc?export=view&id=1bnTCGOdz2z7DOJJYgGKqTAgesaeJiep0)
 
 ![image](https://drive.google.com/uc?export=view&id=1Z9eVsrnj1GcYsFG7A1LPQYJfT_eb_WOk)
