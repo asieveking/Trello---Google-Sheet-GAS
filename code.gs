@@ -2,9 +2,9 @@
 //url key    *  https://trello.com/app-key *
 //url token  * https://trello.com/1/authorize?expiration=never&scope=read,write,account&response_type=token&name=Server%20Token&key=[KEY] *
 
-// Run function "Main ()" to start
+// Run function "main ()" to start
 
-function Main() {
+function main() {
   getData()
   const url= "https://api.trello.com/1/"; 
   const key_and_token = "key="+api_key+"&token="+api_token;
@@ -105,7 +105,8 @@ function Main() {
       }  
     }   
   }
-  sheet.getRange(1,final_column+1,1, list_title.length).setValues([list_title])  
+  sheet.getRange(1,final_column+1,1, list_title.length).setValues([list_title]) 
+  return true 
 }
 // Request API
 function fetchUrl(urlBuilt){

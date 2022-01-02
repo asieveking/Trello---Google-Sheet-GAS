@@ -45,15 +45,20 @@
            <input type="text" id="autocomplete-input-tablero" class="autocomplete-tablero" value="<?=data.dashboard?>">
           <label for="autocomplete-input-tablero">Board(s) keyword</label>
         </div> 
-        <div class="input-field col s8">                         
+        <div class="input-field col s4">                         
           <button id="btn-clear" class="btn waves-effect waves-light blue">Clear
           <i class="material-icons right">clear_all</i>
           </button>
         </div>       
         <div class="input-field col s4">                         
-          <button id="btn-send" class="btn waves-effect waves-light blue">Save
+          <button id="btn-save" class="btn waves-effect waves-light blue">Save
+          <i class="material-icons right">done_all</i>
+        </button>
+        </div>
+        <div class="input-field col s4">                         
+          <button id="btn-run" class="btn waves-effect waves-light blue disabled">Run
           <i class="material-icons right">send</i>
-          </button>
+        </button>
         </div>
       </div><!--END ROW-->
     
@@ -61,23 +66,26 @@
     </div>
        <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
     <script>
   
     keyBox = document.getElementById('autocomplete-input-key');
     tokenBox = document.getElementById('autocomplete-input-token');
     dashboardBox = document.getElementById('autocomplete-input-tablero');
+    btnSave = document.getElementById('btn-save')   
+    btnClear = document.getElementById('btn-clear')
+
     keyBox.addEventListener('input', function() {
       if(keyBox.value && keyBox.value.length >24){
       document.getElementById('url-token').innerHTML ='<a href="https://trello.com/1/authorize?expiration=never&scope=read,write,account&response_type=token&name=Server%20Token&key='+
       keyBox.value+'" class="btn-floating btn-small waves-effect waves-light blue"  target="_blank"><i class="material-icons">link</i></a>'    
       }
     });
-    document.getElementById('btn-send').addEventListener('click', function() {
-       data={
-        key: keyBox.value.trim() ,
-        token:tokenBox.value.trim(),
-        dashboard:dashboardBox.value.trim()
-       };
+
+    btnSave.addEventListener('click', function() {
+       data={ key: keyBox.value.trim(), token:tokenBox.value.trim(), dashboard:dashboardBox.value.trim() };
+      toggleButtonRun(keyBox.value,tokenBox.value,dashboardBox.value) 
+
       var message
       if(data.key && data.token && data.dashboard){
         message= 'Saved correctly'
@@ -87,19 +95,42 @@
       }
      M.toast({html: message})
     })
-    document.getElementById('btn-clear').addEventListener('click', function() {       
+
+    btnClear.addEventListener('click', function() {       
       if(keyBox.value || tokenBox.value || dashboardBox.value){  
-        data={
-          key: "",
-          token:"",
-          dashboard:""
-        };        
-        let message= 'Clean fields'
+        data={ key: "", token:"", dashboard:"" };
+        toggleButtonRun(keyBox.value,tokenBox.value,dashboardBox.value)
         keyBox.value=tokenBox.value=dashboardBox.value="";         
-        google.script.run.setData(data);      
+        google.script.run.setData(data);    
+        let message= 'Clean fields'  
         M.toast({html: message})
       }
     })
+
+    document.getElementById('btn-run').addEventListener('click', function() { 
+      toggleButtonRun("","","")
+      btnClear.classList.add("disabled")
+      btnSave.classList.add("disabled")
+
+      google.script.run.withSuccessHandler(function() {
+        toggleButtonRun(keyBox.value,tokenBox.value,dashboardBox.value);
+        btnSave.classList.remove("disabled");
+        btnClear.classList.remove("disabled");
+      }).main();      
+    })
+
+    function toggleButtonRun(keyBoxValue,tokenBoxValue,dashboardBoxValue){
+      saveBtn=document.getElementById('btn-run')
+      if(keyBoxValue && tokenBoxValue && dashboardBoxValue){
+        saveBtn.classList.remove("disabled")
+      }else{
+        saveBtn.classList.add("disabled")
+      }
+    }
+
+    toggleButtonRun(keyBox.value,tokenBox.value,dashboardBox.value)
+
+
     </script>
     </body>
   </html>
