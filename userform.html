@@ -74,6 +74,7 @@
     dashboardBox = document.getElementById('autocomplete-input-tablero');
     btnSave = document.getElementById('btn-save')   
     btnClear = document.getElementById('btn-clear')
+    btnRun = document.getElementById('btn-run')
 
     keyBox.addEventListener('input', function() {
       if(keyBox.value && keyBox.value.length >24){
@@ -110,21 +111,22 @@
     document.getElementById('btn-run').addEventListener('click', function() { 
       toggleButtonRun("","","")
       btnClear.classList.add("disabled")
-      btnSave.classList.add("disabled")
-
+      btnSave.classList.add("disabled")      
+      M.toast({html: 'Run script'})
+      
       google.script.run.withSuccessHandler(function() {
         toggleButtonRun(keyBox.value,tokenBox.value,dashboardBox.value);
         btnSave.classList.remove("disabled");
         btnClear.classList.remove("disabled");
+        M.toast({html: 'Script Finished'})
       }).main();      
     })
 
-    function toggleButtonRun(keyBoxValue,tokenBoxValue,dashboardBoxValue){
-      saveBtn=document.getElementById('btn-run')
+    function toggleButtonRun(keyBoxValue,tokenBoxValue,dashboardBoxValue){      
       if(keyBoxValue && tokenBoxValue && dashboardBoxValue){
-        saveBtn.classList.remove("disabled")
+        btnRun.classList.remove("disabled")
       }else{
-        saveBtn.classList.add("disabled")
+        btnRun.classList.add("disabled")
       }
     }
 
