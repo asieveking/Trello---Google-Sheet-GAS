@@ -3,22 +3,25 @@ Este desarrollo extrae datos desde Trello y la muestra en la planilla de calculo
 
 Este desarrollo utiliza las credenciales de API Trello (Key & Token), con el lenguaje de programacion javascript siendo ejecutado dentro del entorno de desarrollo de Google App Script.
 
-### Presentacion
-![image](https://drive.google.com/uc?export=view&id=1mZ5F0DSyKYn3CSNraCJgFnFaMn2Obkad)
 
-![image](https://drive.google.com/uc?export=view&id=1BGVQff2jyvPCHqxTBbG9THcnBCT5vHHK)
+
+### Presentacion
+![Alt text](/../Images_guide/Images_guide/Home%20Trello.png?raw=true)
+
+![Alt text](/../Images_guide/Images_guide/Home%20Dashboard.png?raw=true)
 
 ### Ahora, incluye soporte para la extraccion de campos personalizados
-![image](https://drive.google.com/uc?export=view&id=1bnTCGOdz2z7DOJJYgGKqTAgesaeJiep0)
+![Alt text](/../Images_guide/Images_guide/Custom%20fields/Custom%20fields%20Dashboard.png?raw=true)
 
 
-![image](https://drive.google.com/uc?export=view&id=1Z9eVsrnj1GcYsFG7A1LPQYJfT_eb_WOk)
+![Alt text](/../Images_guide/Images_guide/Custom%20fields/Custom%20filed%20Sheet.png?raw=true)
 
 
 ### Primeros pasos
 Para comenzar, primero, debes hacer una copia a la hoja de calculo del siguiente `<link>`: [Trello G-Sheet]( https://docs.google.com/spreadsheets/d/1o-nKx_6y-E0C9cCkjcaz4D7OjH0u3vd7qbsrkDOtb9s/edit?usp=sharing).  como se muestra acontinuacion:
 
-![image](https://drive.google.com/uc?export=view&id=1wza2e27ueTe4vb002iAJEQeTzpo5RG7P)
+![Alt text](/../Images_guide/Images_guide/0%20-%20Starting%20with%20Trello/Make%20a%20copy.png?raw=true)
+
 
 Despues de realizar la copia, debes otorgarle permisos al script para ejecutarse, siguiendo las instrucciones del siguiente video:
 
@@ -28,19 +31,19 @@ Despues de realizar la copia, debes otorgarle permisos al script para ejecutarse
 
 Para continuar con este paso, primero, debemos asegurarnos de estar logueado en Trello. Y acontinuacion, seguir los siguientes instruciones:
 ##### 1
-![image](https://drive.google.com/uc?export=view&id=1pvF8Nr3vvtwKZMDYRf2hpvX2Q6bMWe4P)
+![Alt text](/../Images_guide/Images_guide/1%20-%20Credentials/5.png?raw=true)
 ##### 2
-![image](https://drive.google.com/uc?export=view&id=1ovzEDxABnEpzu1eJPduVE5Sd7IuPt8Vn)
+![Alt text](/../Images_guide/Images_guide/1%20-%20Credentials/6.png?raw=true)
 ##### 3
-![image](https://drive.google.com/uc?export=view&id=1sHC7-PuOMsCeVD-gcmoNKrhzC3PX7_XZ)
+![Alt text](/../Images_guide/Images_guide/1%20-%20Credentials/7.png?raw=true)
 ##### 4
-![image](https://drive.google.com/uc?export=view&id=1DgQc6BCdUaogBIPfn3nC8Unz7-2P89cd)
+![Alt text](/../Images_guide/Images_guide/1%20-%20Credentials/8.png?raw=true)
 ##### 5
-![image](https://drive.google.com/uc?export=view&id=1JeTF3AIRTHcvYuLh4_QpwCe0WQhEgUjR)
+![Alt text](/../Images_guide/Images_guide/1%20-%20Credentials/9.png?raw=true)
 ##### 6
-![image](https://drive.google.com/uc?export=view&id=17-QQt6gIi5Qc1hf7jGgn0Ai1UkibFjlv)
+![Alt text](/../Images_guide/Images_guide/1%20-%20Credentials/10.png?raw=true)
 ##### 7
-![image](https://drive.google.com/uc?export=view&id=1SPkbt7agMo9nk0fsyOlXnTs1NL82XXyO)
+![Alt text](/../Images_guide/Images_guide/1%20-%20Credentials/11.png?raw=true)
 
 Ahora puedes hacer click sobre el boton 'Run' para comenzar a ejecutar el script. 
 Si todo esta correcto, el script debera crear una nueva hoja de calculo con la informacion  de tu(s) tablero(s)
@@ -50,21 +53,21 @@ Si todo esta correcto, el script debera crear una nueva hoja de calculo con la i
 Si deseas que la informacion se extraiga automaticamente, sin tener que presionar el boton "Run". Entonces, deberas seguir las siguientes instrucciones:
 
 ###### 1
-![image](https://drive.google.com/uc?export=view&id=14SktOWvl_RnSBTUvJXCheunr8a0nDSMB)
+![Alt text](/../Images_guide/Images_guide/2%20-%20Automatization/1.png?raw=true)
 ###### 2
-![image](https://drive.google.com/uc?export=view&id=113URZqCsmawD179meBQiGXws6d_g2goh)
+![Alt text](/../Images_guide/Images_guide/2%20-%20Automatization/2.png?raw=true)
 ###### 3
-![image](https://drive.google.com/uc?export=view&id=1MsQ1KiKOqP8qRe9ZzfR8U3B60g_JFJKg)
+![Alt text](/../Images_guide/Images_guide/2%20-%20Automatization/3.png?raw=true)
 ###### 4
 Debes seleccionar los mismos campos que se muestran acontinuacion:
-![image](https://drive.google.com/uc?export=view&id=1_dA9PKIPBm_cHaDpUew1d-uFhKiKSPe2)
+![Alt text](/../Images_guide/Images_guide/2%20-%20Automatization/4.png?raw=true)
 
 Por ejemplo: Segun la imagen anterior, el script se ejecutara todos los dias entre las 8 y 9 pm. Puedes cambiar la hora de ejecucion segun tus gustos o preferencias.
 Tambien, puedes ser notificado en caso de que la extraccion falle. Para eso, debes habilitar la opcion "Failure notification settings": inmediatemente, cada hora, cada dia o semenalmente. (esta notificacion llegara via Gmail)
 Finalmente presionas el boton guardar.
 
 ###### 5
-![image](https://drive.google.com/uc?export=view&id=1g6J-6Eyeg_Mytrn-oe659luLXe6PLTBl)
+![Alt text](/../Images_guide/Images_guide/2%20-%20Automatization/5.png?raw=true)
 
 Se ha guardado correctamente la programacion de ejecucion del script. Recuerda que puedes seguir agregando mas horarios de ejecucion presionando el boton "Add Trigger"
 
