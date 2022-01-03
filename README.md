@@ -18,7 +18,7 @@ Este desarrollo utiliza las credenciales de API Trello (Key & Token), con el len
 
 
 ### Primeros pasos
-Para comenzar, primero, debes hacer una copia a la hoja de calculo del siguiente `<link>`: [Trello G-Sheet]( https://docs.google.com/spreadsheets/d/1o-nKx_6y-E0C9cCkjcaz4D7OjH0u3vd7qbsrkDOtb9s/edit?usp=sharing).  como se muestra acontinuacion:
+Para comenzar, primero, debes hacer una copia de la hoja de calculo del siguiente `<link>`: [Trello G-Sheet]( https://docs.google.com/spreadsheets/d/1o-nKx_6y-E0C9cCkjcaz4D7OjH0u3vd7qbsrkDOtb9s/edit?usp=sharing).  como se muestra acontinuacion:
 
 ![Alt text](/../Images_guide/Images_guide/0%20-%20Starting%20with%20Trello/Make%20a%20copy.png?raw=true)
 
@@ -29,7 +29,7 @@ Despues de realizar la copia, debes otorgarle permisos al script para ejecutarse
 
 ### Ingresando credenciales de Trello al formulario
 
-Para continuar con este paso, primero, debemos asegurarnos de estar logueado en Trello. Y acontinuacion, seguir los siguientes instruciones:
+Para continuar con este paso, debes estar logueado con tu cuenta en Trello. Y acontinuacion, seguir los siguientes instruciones:
 ##### 1
 ![Alt text](/../Images_guide/Images_guide/1%20-%20Credentials/5.png?raw=true)
 ##### 2
