@@ -1,5 +1,5 @@
 ## Bienvenido al repositorio de extraccion Trello Google Sheet
-Este desarrollo extrae datos desde Trello y la muestra en la planilla de calculo de Google.
+Este desarrollo extrae datos desde los tableros de tu cuenta Trello y la muestra en la planilla de calculo de Google.
 
 Este desarrollo utiliza las credenciales de API Trello (Key & Token), con el lenguaje de programacion javascript siendo ejecutado dentro del entorno de desarrollo de Google App Script.
 
