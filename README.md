@@ -62,8 +62,8 @@ Si deseas que la informacion se extraiga automaticamente, sin tener que presiona
 Debes seleccionar los mismos campos que se muestran acontinuacion:
 ![Alt text](/../Images_guide/Images_guide/2%20-%20Automatization/4.png?raw=true)
 
-Por ejemplo: Segun la imagen anterior, el script se ejecutara todos los dias entre las 8 y 9 pm. Puedes cambiar la hora de ejecucion segun tus gustos o preferencias.
-Tambien, puedes ser notificado en caso de que la extraccion falle. Para eso, debes habilitar la opcion "Failure notification settings": inmediatemente, cada hora, cada dia o semenalmente. (esta notificacion llegara via Gmail)
+Por ejemplo: Segun la imagen anterior, el script, se ejecutara todos los dias entre las 8 y 9 pm. Puedes cambiar la hora de ejecucion segun tus gustos o preferencias.
+Tambien, puedes ser notificado en caso de que la extraccion falle. Para eso, debes habilitar la opcion "Failure notification settings": inmediatemente, cada hora, cada dia o semanalmente. (esta notificacion llegara via Gmail)
 Finalmente presionas el boton guardar.
 
 ###### 5
